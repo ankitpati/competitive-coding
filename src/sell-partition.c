@@ -20,16 +20,28 @@ void partition(int n)
 
     part = malloc(n * sizeof(*part));
 
-    for (part[last = 0] = n; ; part[++last] = rest) {
+    part[last = 0] = n;
+
+    for (;;) {
         benefit(part, last + 1);
 
-        for (rest = 0; last >= 0 && part[last] == 1; --last)
-            rest += part[last];
+        rest = 0;
+
+        while (part[last] == 1) {
+            rest += part[last--];
+            if (last < 0) return;
+        }
  
-        if (last < 0) return;
- 
-        for (--part[last], ++rest; rest > part[last]; ++last)
-            rest -= part[last + 1] = part[last];
+        --part[last];
+        ++rest;
+
+        while (rest > part[last]) {
+            part[last + 1] = part[last];
+            rest -= part[last + 1];
+            ++last;
+        }
+
+        part[++last] = rest;
     }
 }
 
