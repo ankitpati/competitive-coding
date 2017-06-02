@@ -16,13 +16,12 @@ struct point {
 
     point()
     {
+        int i;
+
         component = -1;
 
-        for (int i = 0; i < 4; ++i)
-            links[i] = par(-1, -1);
-
-        for (int i = 0; i < 4; ++i)
-            region[i] = -1;
+        for (i = 0; i < 4; ++i) links [i] = par(-1, -1);
+        for (i = 0; i < 4; ++i) region[i] = -1;
     }
 };
 
