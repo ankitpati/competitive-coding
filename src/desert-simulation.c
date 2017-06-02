@@ -4,7 +4,7 @@
 int cols; /* grid is row major */
 
 /* treat flat array as 2D array */
-int *ind(int *m, int r, int c) { return m + cols*r + c; }
+inline int *ind(int *m, int r, int c) { return m + cols*r + c; }
 
 void find_nbr_ind(int row, int col, int nbr_indices[][2])
 {
