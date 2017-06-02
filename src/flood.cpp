@@ -129,6 +129,21 @@ void deflate(char *pts, char *wls)
         }
 }
 
+void my_itoa(int i, char *a)
+{
+    char *t, tc;
+
+    t = a;
+    do *t++ = '0' + i % 10;
+    while (i /= 10);
+    *t = '\0';
+
+    for (--t; a < t; ++a, --t)
+        tc = *a,
+        *a = *t,
+        *t = tc;
+}
+
 char *GetStrongWall(int n_, char *pts, int, char *wls)
 {
     int i, j, r, a, b, s, number_of_components;
@@ -201,7 +216,7 @@ char *GetStrongWall(int n_, char *pts, int, char *wls)
 
     *wls = '\0';
     for (list::iterator i = sol.begin(); i != sol.end(); ++i) {
-        sprintf(wls + strlen(wls), "%d", *i + 1);
+        my_itoa(*i + 1, wls + strlen(wls));
         strcat(wls, ",");
     }
 
