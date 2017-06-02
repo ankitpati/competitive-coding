@@ -2,6 +2,7 @@
 #include <queue>
 #include <vector>
 #include <algorithm>
+#include <cstring>
 using namespace std;
 
 typedef vector<int> list;
@@ -128,7 +129,6 @@ void deflate(char *pts, char *wls)
         }
 }
 
-string result;
 char *GetStrongWall(int n_, char *pts, int, char *wls)
 {
     int i, j, r, a, b, s, number_of_components;
@@ -199,19 +199,18 @@ char *GetStrongWall(int n_, char *pts, int, char *wls)
 
     sort(sol.begin(), sol.end());
 
-    char i2s[13];
+    *wls = '\0';
     for (list::iterator i = sol.begin(); i != sol.end(); ++i) {
-        sprintf(i2s, "%d", *i + 1);
-        result += i2s;
-        result += ',';
+        sprintf(wls + strlen(wls), "%d", *i + 1);
+        strcat(wls, ",");
     }
 
-    if (result.size())
-        result.resize(result.size() - 1);
+    if (*wls)
+        wls[strlen(wls) - 1] = '\0';
     else
-        result += '0';
+        strcat(wls, "0");
 
-    return (char *)result.c_str();
+    return wls;
 }
 
 int main()
