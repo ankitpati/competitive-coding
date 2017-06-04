@@ -2,13 +2,13 @@
 #include <queue>
 #include <vector>
 #include <algorithm>
-#include <cstring>
 using namespace std;
 
 typedef vector<int> list;
 typedef pair<int, int> par;
 
-int n;
+int n, w;
+char *wls_end;
 
 struct point {
     int x, y, component, region[4];
@@ -39,7 +39,7 @@ struct region {
     }
 };
 
-inline int direction(int a, int b)
+__attribute__((always_inline)) inline int direction(int a, int b)
 {
     return points[a].y == points[b].y ? points[a].x < points[b].x ? 0 : 2
                                       : points[a].y > points[b].y ? 1 : 3;
@@ -89,53 +89,41 @@ void visit(int i, int j, region &r, int id)
 
 void deflate(char *pts, char *wls)
 {
-    int i, j, is_x, a, b, x;
+    int i, c, j, a, b;
 
-    is_x = 1;
-    for (i = 0; pts[i]; ++i)
-        if (isdigit(pts[i])) {
-            if (is_x)
-                x = atoi(pts + i);
-            else {
-                point pt;
-                pt.x = x;
-                pt.y = atoi(pts + i);
-                points.push_back(pt);
-            }
+    for (i = 1, c = 0; c < n; ++c, i += 3) {
+        point pt;
 
-            is_x = !is_x;
+        for (pt.x = 0; pts[i] != ','; ++i) pt.x = pt.x * 10 + pts[i] - '0';
 
-            while (isdigit(pts[i])) ++i;
-        }
+        ++i;
+        for (pt.y = 0; pts[i] != ')'; ++i) pt.y = pt.y * 10 + pts[i] - '0';
 
-    is_x = 1;
-    for (i = j = 0; wls[i]; ++i)
-        if (isdigit(wls[i])) {
-            if (is_x)
-                a = atoi(wls + i) - 1;
-            else {
-                b = atoi(wls + i) - 1;
+        points.push_back(pt);
+    }
 
-                points[a].links[direction(a, b)] = par(b, j);
-                points[b].links[direction(b, a)] = par(a, j);
+    for (i = 1, j = 0; w--; ++j, i += 3) {
+        for (a = 0; wls[i] != ','; ++i) a = a * 10 + wls[i] - '0';
+        --a;
 
-                ++j;
-            }
+        ++i;
+        for (b = 0; wls[i] != ')'; ++i) b = b * 10 + wls[i] - '0';
+        --b;
 
-            is_x = !is_x;
-
-            while (isdigit(wls[i])) ++i;
-        }
+        points[a].links[direction(a, b)] = par(b, j);
+        points[b].links[direction(b, a)] = par(a, j);
+    }
 }
 
-void my_itoa(int i, char *a)
+void my_itoa(int i)
 {
-    char *t, tc;
+    char *t, tc, *a;
 
-    t = a;
+    a = t = wls_end;
     do *t++ = '0' + i % 10;
     while (i /= 10);
     *t = '\0';
+    wls_end = t;
 
     for (--t; a < t; ++a, --t)
         tc = *a,
@@ -143,11 +131,16 @@ void my_itoa(int i, char *a)
         *t = tc;
 }
 
-char *GetStrongWall(int n_, char *pts, int, char *wls)
+char *GetStrongWall(int n_, char *pts, int w_, char *wls)
 {
     int i, j, r, a, b, s, number_of_components;
+    list sol;
+    queue<int> q;
 
     n = n_;
+    w = w_;
+
+    points.reserve(n);
     deflate(pts, wls);
 
     number_of_components = 0;
@@ -171,8 +164,6 @@ char *GetStrongWall(int n_, char *pts, int, char *wls)
 
                 if (out == -1 || regions[r].area > regions[out].area) out = r;
             }
-
-    queue<int> q;
 
     for (i = 0; i < number_of_components; ++i) {
         if (out_region[i] == -1) continue;
@@ -198,8 +189,6 @@ char *GetStrongWall(int n_, char *pts, int, char *wls)
         q.pop();
     }
 
-    list sol;
-
     for (a = 0; a < n; ++a)
         for (i = 0; i < 4; ++i) {
             b = points[a].links[i].first;
@@ -214,15 +203,20 @@ char *GetStrongWall(int n_, char *pts, int, char *wls)
     sort(sol.begin(), sol.end());
 
     *wls = '\0';
+    wls_end = wls;
     for (list::iterator i = sol.begin(); i != sol.end(); ++i) {
-        my_itoa(*i + 1, wls + strlen(wls));
-        strcat(wls, ",");
+        my_itoa(*i + 1);
+
+        *wls_end++ =  ',';
+        *wls_end   = '\0';
     }
 
     if (*wls)
-        wls[strlen(wls) - 1] = '\0';
-    else
-        strcat(wls, "0");
+        *--wls_end = '\0';
+    else {
+        *wls_end++ =  '0';
+        *wls_end   = '\0';
+    }
 
     return wls;
 }
