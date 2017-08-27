@@ -6,16 +6,16 @@ use warnings;
 <>;                         # discard n; we are going to look for EOF anyways
 
 my @unsorted;
-my $maxlen = 0;
 
 while (<>) {
     chomp $_;
     push @unsorted, $_;
-    $maxlen = length $_ if $maxlen < length $_;
 }
 
-$_ = '0'x($maxlen - length $_) . $_ foreach @unsorted;
-@unsorted = sort @unsorted; # optimises to in-place sort
-s/^0+// foreach @unsorted;
+@unsorted = sort {          # optimises to in-place sort
+    my $len = length ($a) - length ($b);
+    return $len if $len;    # two-level sort: sort by value only
+    return $a cmp $b;       #                 if lengths match.
+} @unsorted;
 
 print "$_\n" foreach @unsorted;
