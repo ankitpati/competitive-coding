@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-<>;
+<>;                         # discard n; we are going to look for EOF anyways
 
 my @unsorted;
 my $maxlen = 0;
@@ -14,5 +14,8 @@ while (<>) {
     $maxlen = length $_ if $maxlen < length $_;
 }
 
-print "$_\n" foreach
-         map { s/^0+//r } sort map { '0'x($maxlen - length $_) . $_ } @unsorted;
+$_ = '0'x($maxlen - length $_) . $_ foreach @unsorted;
+@unsorted = sort @unsorted; # optimises to in-place sort
+s/^0+// foreach @unsorted;
+
+print "$_\n" foreach @unsorted;
