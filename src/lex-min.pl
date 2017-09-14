@@ -5,21 +5,18 @@ use warnings;
 
 <>;                     # discard n; we look for EOF anyways
 
-my (@str1, @str2, @res);
+my (@str1, @str2, @res, $len1, $len2);
 
 sub lexcmp {
-    my ($str1, $str2) = @_;
+    my ($str1, $str2, $len1, $len2) = @_;
 
-    my $i = 0;
-
-    while ($i < @$str1 && $i < @$str2) {
-        return 1 if $str1->[$i] lt $str2->[$i];
-        return 0 if $str1->[$i] gt $str2->[$i];
-        ++$i;
+    for (0 .. ($len1 < $len2 ? $len1 : $len2) - 1) {
+        return 1 if $str1->[$_] lt $str2->[$_];
+        return 0 if $str1->[$_] gt $str2->[$_];
     }
 
-    return 1 if @$str1 < @$str2;
-    return 0 if @$str1 > @$str2;
+    return 1 if $len1 < $len2;
+    return 0 if $len1 > $len2;
 
     return 1;
 }
@@ -32,8 +29,9 @@ while (<>) {
     @str2 = split '', $s;
     @res  = ();
 
-    while (@str1 && @str2) {
-        push @res, lexcmp (\@str1, \@str2) ? shift @str1 : shift @str2;
+    while (($len1 = @str1) && ($len2 = @str2)) {
+        push @res,
+            lexcmp (\@str1, \@str2, $len1, $len2) ? shift @str1 : shift @str2;
     }
 
     while (@str1) {
