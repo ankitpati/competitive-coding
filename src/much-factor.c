@@ -30,7 +30,9 @@ void print_divisors(bigint n)
 
     bigint i, c, *divs, d, j, k;
 
-    divs = malloc((c = bigsqrt(n) + 1) * sizeof(*divs));
+    /* allocate memory for maximum number of possible factors */
+    divs = malloc((c = bigsqrt(n) + 1) * 2 * sizeof(*divs));
+
     d = 0;
 
     for (i = 1; i <= c; ++i) {
@@ -42,6 +44,7 @@ void print_divisors(bigint n)
     for (j = 0; j < d; ++j) printf("%" BIGINTFMT " ", divs[j]);
 
     putchar('\n');
+    free(divs);
 }
 
 int main()
