@@ -16,23 +16,17 @@ while (<>) {
     my $maximum = 1;
 
     my @lis;
-    $lis[0] = [$sticks[0]];
+    $lis[0] = [1, $sticks[0]];
     foreach my $i (1 .. $#sticks) {
-        my ($longest, $longest_j);
+        my $longest;
         foreach my $j (0 .. $i-1) {
             if ($lis[$j][-1] <= $sticks[$i]) {
-                my $lis_count = @{$lis[$j]};
-                if ($lis_count > ($longest // 0)) {
-                    $longest = $lis_count;
-                    $longest_j = $j;
-                }
+                $longest = $lis[$j][0] if ($lis[$j][0] > ($longest // 0));
             }
         }
 
-        $lis[$i] = [defined $longest ? @{$lis[$longest_j]} : (), $sticks[$i]];
-
-        my $elems = @{$lis[$i]};
-        $maximum = $elems if $elems > $maximum;
+        $lis[$i] = [($longest // 0) + 1, $sticks[$i]];
+        $maximum = $lis[$i][0] if $lis[$i][0] > $maximum;
     }
 
     print "$maximum\n";
