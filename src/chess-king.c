@@ -1,9 +1,8 @@
 #include <stdio.h>
-#include <math.h>
 
 int find_moves(int n)
 {
-    return n ? pow((n + 1)*2 + 1, 2) : 8;
+    return 4*n * (n + 3) + 8 + !!n;
 }
 
 int main()
