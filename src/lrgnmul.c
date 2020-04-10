@@ -15,9 +15,13 @@ void getnum(char *s, int *len)
 
 void putnum(int *s, int len)
 {
-    int i;
-    for (i = len - 1; i; --i) if (s[i]) break;
-    while (i >= 0) putchar('0' + s[i--]);
+    while (len > 1)
+        if (*s)
+            break;
+        else
+            ++s, --len;
+
+    while (len--) putchar('0' + *(s++));
 }
 
 int main()
@@ -27,7 +31,7 @@ int main()
     char *NUM1, *NUM2;
 
     /* counters */
-    int tc, i, j, p1, p2;
+    int tc, i, j;
 
     /* multiplication artefacts */
     int carry, digitprod;
@@ -49,17 +53,17 @@ int main()
 
         prod = calloc(lenp, sizeof(*prod));
 
-        for (i = len1 - 1, p1 = 0; i >= 0; --i, ++p1) {
+        for (i = len1 - 1; i >= 0; --i) {
             carry = 0;
 
-            for (j = len2 - 1, p2 = 0; j >= 0; --j, ++p2) {
-                digitprod = NUM1[i] * NUM2[j] + prod[p1 + p2] + carry;
+            for (j = len2 - 1; j >= 0; --j) {
+                digitprod = NUM1[i] * NUM2[j] + prod[i + j + 1] + carry;
                 carry = digitprod / 10;
-                prod[p1 + p2] = digitprod % 10;
+                prod[i + j + 1] = digitprod % 10;
             }
 
             if (carry)
-                prod[p1 + p2] += carry;
+                prod[i + j + 1] += carry;
         }
 
         putchar('#');
