@@ -2,7 +2,6 @@
 /* Large Number Multiplication */
 
 #include <stdio.h>
-#include <stdlib.h>
 
 #define STRSIZ 32000
 
@@ -28,20 +27,17 @@ int main()
 {
     /* variables in ALL CAPS are provided by the online judge plaform */
     int TC;
-    char *NUM1, *NUM2;
+    char NUM1[STRSIZ], NUM2[STRSIZ];
 
     /* counters */
     int tc, i, j;
 
     /* multiplication artefacts */
     int carry, digitprod;
-    int *prod;
+    int prod[STRSIZ + STRSIZ];
 
     /* lengths */
     int len1, len2, lenp;
-
-    NUM1 = malloc(STRSIZ);
-    NUM2 = malloc(STRSIZ);
 
     scanf(" %d%*c", &TC);
 
@@ -51,7 +47,8 @@ int main()
 
         lenp = len1 + len2;
 
-        prod = calloc(lenp, sizeof(*prod));
+        for (i = 0; i < lenp; ++i)
+            prod[i] = 0;
 
         for (i = len1 - 1; i >= 0; --i) {
             carry = 0;
@@ -71,8 +68,6 @@ int main()
         putchar(' ');
         putnum(prod, lenp);
         putchar('\n');
-
-        free(prod);
     }
 
     return 0;
