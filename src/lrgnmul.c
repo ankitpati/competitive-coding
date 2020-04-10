@@ -59,8 +59,7 @@ int main()
                 prod[i + j + 1] = digitprod % 10;
             }
 
-            if (carry)
-                prod[i + j + 1] += carry;
+            prod[i + j + 1] += carry;
         }
 
         putchar('#');
