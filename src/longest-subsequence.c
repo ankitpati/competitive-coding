@@ -41,10 +41,12 @@ size_t lcs(char *str1, char *str2)
                 suflen[i][j] = suflen[i - 1][j] > suflen[i][j - 1] ?
                                             suflen[i - 1][j] : suflen[i][j - 1];
 
+    j = suflen[len1][len2];
+
     for (i = 0; i <= len1; ++i) free(suflen[i]); /* 2 */
     free(suflen); /* 1 */
 
-    return suflen[len1][len2];
+    return j;
 }
 
 int main()
