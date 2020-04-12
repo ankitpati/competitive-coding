@@ -50,7 +50,7 @@ class Parenthesize {
             }
         }
 
-        valueList.sort((a, b) -> { return a - b; });
+        valueList.sort((a, b) -> a - b);
         memo.put(expr, valueList);
         return valueList;
     }
