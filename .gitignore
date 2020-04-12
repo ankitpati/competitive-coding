@@ -6,3 +6,6 @@
 
 # Unignore all directories.
 !*/
+
+# Ignore .class files
+*.class
